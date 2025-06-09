@@ -7,17 +7,12 @@ using myfinance_web_dotnet_o8.Infraestructure;
 
 namespace myfinance_web_dotnet_o8.Services;
 
-public class PlanoContaService : IPlanoContaService
+public class PlanoContaService(MyFinanceDbContext banco) : IPlanoContaService
 {
 
-    private readonly MyFinanceDbContext _banco;
+    private readonly MyFinanceDbContext _banco = banco;
 
-    public PlanoContaService(MyFinanceDbContext banco)
-    {
-        _banco = banco;
-    }
-
-    public void Excluir(int id)
+  public void Excluir(int id)
     {
         var item = RetornarRegistro(id);
         _banco.Attach(item);
