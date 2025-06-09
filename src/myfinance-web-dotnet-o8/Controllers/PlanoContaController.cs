@@ -1,18 +1,22 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using myfinance_web_dotnet_o8.Domain;
 using myfinance_web_dotnet_o8.Infraestructure;
 using myfinance_web_dotnet_o8.Models;
+using myfinance_web_dotnet_o8.Services;
 
 namespace myfinance_web_dotnet_o8.Controllers;
 
-public class PlanoContaController(ILogger<PlanoContaController> logger, MyFinanceDbContext banco) : Controller
+[Route("[controller]")]
+public class PlanoContaController(ILogger<PlanoContaController> logger, IPlanoContaService PlanoContaService) : Controller
 {
     private readonly ILogger<PlanoContaController> _logger = logger;
-    private readonly MyFinanceDbContext _banco = banco;
+    private readonly IPlanoContaService _PlanoContaService = PlanoContaService;
 
-  public IActionResult Index()
+    [Route("Index")]
+    public IActionResult Index()
     {
-        ViewBag.Lista = _banco.PlanoConta.ToList();
+        ViewBag.Lista = _PlanoContaService.ListarRegistros();
         return View();
     }
 
@@ -25,5 +29,50 @@ public class PlanoContaController(ILogger<PlanoContaController> logger, MyFinanc
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    [HttpPost]
+    [HttpGet]
+    [Route("Cadastro")]
+    [Route("Cadastro/{id?}")]
+    public IActionResult Cadastro(PlanoContaModel? model, int? id)
+    {
+        if (id != null && !ModelState.IsValid)
+        {
+            var registro = _PlanoContaService.RetornarRegistro((int)id);
+
+            var planoContaModel = new PlanoContaModel()
+            {
+                Id = registro.Id,
+                Nome = registro.Nome,
+                Tipo = registro.Tipo
+            };
+
+            return View(planoContaModel);
+        }
+        else if (model != null && ModelState.IsValid)
+        {
+            var planoConta = new PlanoConta
+            {
+                Id = model.Id,
+                Nome = model.Nome,
+                Tipo = model.Tipo
+            };
+            _PlanoContaService.Salvar(planoConta);
+
+            return RedirectToAction("Index");
+        }
+        else
+        {
+            return View();
+        }
+    }
+
+    [HttpGet]
+    [Route("Excluir/{id}")]
+    public IActionResult Excluir(int id)
+    {
+        _PlanoContaService.Excluir(id);
+        return RedirectToAction("Index");
     }
 }
