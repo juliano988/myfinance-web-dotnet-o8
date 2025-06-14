@@ -1,30 +1,36 @@
-@model PlanoContaModel;
+@model TransacaoModel;
 
 @{
-  ViewData["Title"] = "Cadastro de Plano de Conta";
+  ViewData["Title"] = "Registro de Transações";
 }
 
 <h1>@ViewData["Title"]</h1>
 
-<form asp-controller="PlanoConta" asp-action="Cadastro" method="post">
+<form asp-controller="Transacao" asp-action="Cadastro" method="post">
   <div class="container">
 
     <div class="mb-3">
-      <label class="form-label">Descrição</label>
-      <input type="hidden" Id="textId" class="form-label" asp-for="Id"></input>
-      <input type="text" Id="textNome" class="form-label" asp-for="Nome"></input>
-      <span asp-validation-for="Nome" class="text-danger"></span>
+      <label class="form-label">Data</label>
+      <input id="txtData" class="form-control" type="date" asp-for="Data" />
     </div>
 
     <div class="mb-3">
-      <label>@Html.RadioButtonFor(m => m.Tipo, "D")Despesa</label>
-      <label>@Html.RadioButtonFor(m => m.Tipo, "R")Receita</label>
-      <span asp-validation-for="Tipo" class="text-danger"></span>
+      <label class="form-label">Valor</label>
+      <input id="txtValor" class="form-control" type="date" asp-for="Valor" />
     </div>
 
     <div class="mb-3">
-      <button type="submit" class="btn btn-primary">Salvar</button>
-      <button type="button" class="btn btn-secondary" onclick="Voltar()">Cancelar</button>
+      <label class="form-label">Item Plano Conta</label>
+      @Html.DropDownListFor(model => model.PlanoContaId, Model.PlanoConta, "Selecione um Plano de Conta", new { @class
+            = "form-select" })
+      <div id="IblTipo" class="form-label" />
+      <input type="text" itemid="txtTipo" class="form-control" asp-formaction="Tipo" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Histórico</label>
+      <input type="hidden" itemid="textId" asp-for="Id" class="form-control" />
+      <input type="text" id="texNome" asp-for="Historico" class="form-control" />
     </div>
 
   </div>
@@ -32,6 +38,6 @@
 
 <script>
   function Voltar() {
-    window.location.href = "../PlanoConta/Index";
+    window.location.href = "../Transacao/Index";
   }
 </script>

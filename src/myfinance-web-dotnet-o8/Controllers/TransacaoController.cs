@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using myfinance_web_dotnet_o8.Domain;
 using myfinance_web_dotnet_o8.Infraestructure;
 using myfinance_web_dotnet_o8.Models;
@@ -8,10 +9,11 @@ using myfinance_web_dotnet_o8.Services;
 namespace myfinance_web_dotnet_o8.Controllers;
 
 [Route("[controller]")]
-public class TransacaoController(ILogger<TransacaoController> logger, ITransacaoService TransacaoService) : Controller
+public class TransacaoController(ILogger<TransacaoController> logger, ITransacaoService TransacaoService, IPlanoContaService PlanoContaService) : Controller
 {
     private readonly ILogger<TransacaoController> _logger = logger;
     private readonly ITransacaoService _TransacaoService = TransacaoService;
+    private readonly IPlanoContaService _PlanoContaService = PlanoContaService;
 
     [Route("Index")]
     public IActionResult Index()
@@ -67,7 +69,13 @@ public class TransacaoController(ILogger<TransacaoController> logger, ITransacao
         }
         else
         {
-            return View();
+            var listarPlanoConta = _PlanoContaService.ListarRegistros();
+            var planoContaSelectItens = new SelectList(listarPlanoConta, "Id", "Nome");
+            var transacaoModel = new TransacaoModel
+            {
+                PlanoConta = planoContaSelectItens
+            };
+            return View(transacaoModel);
         }
     }
 
