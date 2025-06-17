@@ -16,21 +16,23 @@
 
     <div class="mb-3">
       <label class="form-label">Valor</label>
-      <input id="txtValor" class="form-control" type="date" asp-for="Valor" />
+      <input id="txtValor" class="form-control" type="number" asp-for="Valor" />
     </div>
 
     <div class="mb-3">
       <label class="form-label">Item Plano Conta</label>
-      @Html.DropDownListFor(model => model.PlanoContaId, Model.PlanoConta, "Selecione um Plano de Conta", new { @class
-            = "form-select" })
-      <div id="IblTipo" class="form-label" />
-      <input type="text" itemid="txtTipo" class="form-control" asp-formaction="Tipo" />
+      @Html.DropDownListFor(model => model.PlanoContaId, Model.PlanoConta, "Selecione um Plano de Conta", new { @class = "form-select" })
     </div>
 
     <div class="mb-3">
       <label class="form-label">Histórico</label>
       <input type="hidden" itemid="textId" asp-for="Id" class="form-control" />
       <input type="text" id="texNome" asp-for="Historico" class="form-control" />
+    </div>
+
+    <div>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <button type="button" class="btn btn-secondary" onclick="Voltar()">Voltar</button>
     </div>
 
   </div>

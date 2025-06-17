@@ -39,6 +39,18 @@ public class TransacaoController(ILogger<TransacaoController> logger, ITransacao
     [Route("Cadastro/{id?}")]
     public IActionResult Cadastro(TransacaoModel? model, int? id)
     {
+        if (!ModelState.IsValid)
+        {
+            foreach (var key in ModelState.Keys)
+            {
+                var errors = ModelState[key].Errors;
+                foreach (var error in errors)
+                {
+                    Console.WriteLine($"Erro no campo {key}: {error.ErrorMessage}");
+                }
+            }
+        }
+
         if (id != null && !ModelState.IsValid)
         {
             var registro = _TransacaoService.RetornarRegistro((int)id);
@@ -62,6 +74,7 @@ public class TransacaoController(ILogger<TransacaoController> logger, ITransacao
                 Historico = model.Historico,
                 Data = model.Data,
                 Valor = model.Valor,
+                PlanoContaId = model.PlanoContaId
             };
             _TransacaoService.Salvar(transacao);
 
@@ -73,6 +86,7 @@ public class TransacaoController(ILogger<TransacaoController> logger, ITransacao
             var planoContaSelectItens = new SelectList(listarPlanoConta, "Id", "Nome");
             var transacaoModel = new TransacaoModel
             {
+                Data = DateTime.Now,
                 PlanoConta = planoContaSelectItens
             };
             return View(transacaoModel);
