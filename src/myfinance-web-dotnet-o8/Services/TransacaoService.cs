@@ -25,7 +25,7 @@ public class TransacaoService(MyFinanceDbContext banco) : ITransacaoService
 
     public Transacao RetornarRegistro(int id)
     {
-        var item = _banco.Transacao.Where(x => x.Id == id).FirstOrDefault();
+        var item = _banco.Transacao.Include(x => x.PlanoConta).Where(x => x.Id == id).FirstOrDefault();
         return item;
     }
 
